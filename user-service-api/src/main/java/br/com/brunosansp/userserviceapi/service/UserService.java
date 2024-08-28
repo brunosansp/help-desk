@@ -1,7 +1,9 @@
 package br.com.brunosansp.userserviceapi.service;
 
+import br.com.brunosansp.userserviceapi.mapper.UserMapper;
 import br.com.brunosansp.userserviceapi.repository.UserRepository;
 import entity.User;
+import models.responses.UserResponse;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,13 +12,17 @@ import java.util.List;
 public class UserService {
     
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
     
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, UserMapper userMapper) {
         this.userRepository = userRepository;
+        this.userMapper = userMapper;
     }
     
-    public User findById(String id) {
-        return userRepository.findById(id).orElse(null);
+    public UserResponse findById(String id) {
+        return userMapper.fromEntity(
+            userRepository.findById(id).orElse(null)
+        );
     }
     
     public List<User> findAll() {

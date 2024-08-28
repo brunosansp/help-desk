@@ -2,6 +2,7 @@ package br.com.brunosansp.userserviceapi.controller;
 
 import br.com.brunosansp.userserviceapi.service.UserService;
 import entity.User;
+import models.responses.UserResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,8 +28,8 @@ public class UserController {
     }
     
     @GetMapping("user/{id}")
-    public ResponseEntity<User> byId(@PathVariable String id) {
-        User user = userService.findById(id);
+    public ResponseEntity<UserResponse> byId(@PathVariable String id) {
+        UserResponse user = userService.findById(id);
         return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 }
