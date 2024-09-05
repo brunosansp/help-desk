@@ -3,6 +3,7 @@ package br.com.brunosansp.userserviceapi.service;
 import br.com.brunosansp.userserviceapi.mapper.UserMapper;
 import br.com.brunosansp.userserviceapi.repository.UserRepository;
 import entity.User;
+import models.exceptions.ResourceNotFoundException;
 import models.responses.UserResponse;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +22,10 @@ public class UserService {
     
     public UserResponse findById(String id) {
         return userMapper.fromEntity(
-            userRepository.findById(id).orElse(null)
+            userRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Object not found. " +
+                    "\nCould not find object for id: {id}, Type: " + UserResponse.class.getName())
+            )
         );
     }
     
