@@ -4,6 +4,7 @@ import br.com.brunosansp.userserviceapi.mapper.UserMapper;
 import br.com.brunosansp.userserviceapi.repository.UserRepository;
 import entity.User;
 import models.exceptions.ResourceNotFoundException;
+import models.requests.CreateUserRequest;
 import models.responses.UserResponse;
 import org.springframework.stereotype.Service;
 
@@ -31,5 +32,9 @@ public class UserService {
     
     public List<User> findAll() {
         return userRepository.findAll();
+    }
+    
+    public void save(CreateUserRequest createUserRequest) {
+        userRepository.save(userMapper.fromRequest(createUserRequest));
     }
 }
