@@ -1,12 +1,10 @@
 package br.com.brunosansp.userserviceapi.mapper;
 
-import entity.User;
+import br.com.brunosansp.userserviceapi.entity.User;
 import models.requests.CreateUserRequest;
 import models.responses.UserResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-
-import java.util.List;
 
 import static org.mapstruct.NullValueCheckStrategy.ALWAYS;
 import static org.mapstruct.NullValuePropertyMappingStrategy.IGNORE;

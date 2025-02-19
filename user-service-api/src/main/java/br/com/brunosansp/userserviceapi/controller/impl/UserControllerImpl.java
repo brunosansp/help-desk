@@ -1,8 +1,7 @@
-package br.com.brunosansp.userserviceapi.controller;
+package br.com.brunosansp.userserviceapi.controller.impl;
 
-import br.com.brunosansp.userserviceapi.controller.impl.IUserController;
+import br.com.brunosansp.userserviceapi.controller.IUserController;
 import br.com.brunosansp.userserviceapi.service.UserService;
-import entity.User;
 import models.requests.CreateUserRequest;
 import models.responses.UserResponse;
 import org.springframework.http.HttpStatus;
@@ -21,8 +20,8 @@ public class UserControllerImpl implements IUserController {
     }
     
     @Override
-    public List<User> allUsers() {
-        return userService.findAll();
+    public ResponseEntity<List<UserResponse>> findAll() {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.findAll());
     }
     
     @Override

@@ -2,7 +2,7 @@ package br.com.brunosansp.userserviceapi.service;
 
 import br.com.brunosansp.userserviceapi.mapper.UserMapper;
 import br.com.brunosansp.userserviceapi.repository.UserRepository;
-import entity.User;
+import br.com.brunosansp.userserviceapi.entity.User;
 import models.exceptions.ResourceNotFoundException;
 import models.requests.CreateUserRequest;
 import models.responses.UserResponse;
@@ -23,18 +23,24 @@ public class UserService {
     
     public UserResponse findById(String id) {
         return userMapper.fromEntity(
-            userRepository.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("Object not found. " +
-                    "\nCould not find object for id: {id}, Type: " + UserResponse.class.getName())
-            )
+            find(id)
         );
     }
     
-    public List<User> findAll() {
-        return userRepository.findAll();
+    public List<UserResponse> findAll() {
+        return userRepository.findAll()
+            .stream().map(userMapper::fromEntity)
+            .toList();
     }
     
     public void save(CreateUserRequest createUserRequest) {
         userRepository.save(userMapper.fromRequest(createUserRequest));
+    }
+    
+    private User find(final String id) {
+        return userRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException(
+                "Object not found. Id: " + id + ", Type: " + UserResponse.class.getSimpleName()
+            ));
     }
 }
