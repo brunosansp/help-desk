@@ -2,6 +2,7 @@ package br.com.brunosansp.userserviceapi.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -30,13 +31,15 @@ public interface IUserController {
     @ApiResponse(
         responseCode = "200", description = "Success",
         content = @Content(
-            mediaType = APPLICATION_JSON_VALUE, schema = @Schema(implementation = UserResponse.class)
+            mediaType = APPLICATION_JSON_VALUE,
+            array = @ArraySchema(schema = @Schema(implementation = UserResponse.class))
         )
     )
     @ApiResponse(
         responseCode = "500", description = "Internal Server Error",
         content = @Content(
-            mediaType = APPLICATION_JSON_VALUE, schema = @Schema(implementation = StandardError.class)
+            mediaType = APPLICATION_JSON_VALUE,
+            schema = @Schema(implementation = StandardError.class)
         )
     )
     @GetMapping
