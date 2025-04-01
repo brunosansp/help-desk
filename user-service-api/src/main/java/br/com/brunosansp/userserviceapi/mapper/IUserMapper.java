@@ -14,7 +14,7 @@ import static org.mapstruct.NullValuePropertyMappingStrategy.IGNORE;
     nullValuePropertyMappingStrategy = IGNORE,
     nullValueCheckStrategy = ALWAYS
 )
-public interface UserMapper {
+public interface IUserMapper {
     UserResponse fromEntity(final User user);
     
     @Mapping(target = "id", ignore = true)
