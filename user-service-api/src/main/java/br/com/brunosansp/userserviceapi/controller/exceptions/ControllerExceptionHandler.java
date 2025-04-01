@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import models.exceptions.ResourceNotFoundException;
 import models.exceptions.StandardError;
 import models.exceptions.ValidationException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -35,7 +36,7 @@ public class ControllerExceptionHandler {
     
     @ExceptionHandler(MethodArgumentNotValidException.class)
     ResponseEntity<ValidationException> methodArgumentNotValidException(MethodArgumentNotValidException ex,
-                                                                  final HttpServletRequest request) {
+                                                                        final HttpServletRequest request) {
         var error = ValidationException.builder()
             .timestamp(now())
             .status(BAD_REQUEST.value())
@@ -49,5 +50,20 @@ public class ControllerExceptionHandler {
             error.addError(fieldError.getField(), fieldError.getDefaultMessage());
         }
         return ResponseEntity.badRequest().body(error);
+    }
+    
+    //DataIntegrityViolationException
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    ResponseEntity<StandardError> dataIntegrityViolationException(DataIntegrityViolationException ex,
+                                                                  HttpServletRequest request) {
+        return ResponseEntity.badRequest().body(
+            StandardError.builder()
+                .timestamp(now())
+                .status(BAD_REQUEST.value())
+                .error(BAD_REQUEST.getReasonPhrase())
+                .message(ex.getMessage())
+                .path(request.getRequestURI())
+                .build()
+        );
     }
 }

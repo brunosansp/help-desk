@@ -1,11 +1,12 @@
 package br.com.brunosansp.userserviceapi.service;
 
+import br.com.brunosansp.userserviceapi.entity.User;
 import br.com.brunosansp.userserviceapi.mapper.UserMapper;
 import br.com.brunosansp.userserviceapi.repository.UserRepository;
-import br.com.brunosansp.userserviceapi.entity.User;
 import models.exceptions.ResourceNotFoundException;
 import models.requests.CreateUserRequest;
 import models.responses.UserResponse;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -34,6 +35,7 @@ public class UserService {
     }
     
     public void save(CreateUserRequest createUserRequest) {
+        verifyIfEmailAlreadyExists(createUserRequest.email(), null);
         userRepository.save(userMapper.fromRequest(createUserRequest));
     }
     
@@ -42,5 +44,13 @@ public class UserService {
             .orElseThrow(() -> new ResourceNotFoundException(
                 "Object not found. Id: " + id + ", Type: " + UserResponse.class.getSimpleName()
             ));
+    }
+    
+    private void verifyIfEmailAlreadyExists(final String email, final String id) {
+        userRepository.findByEmail(email)
+            .filter(user -> !user.getId().equals(id))
+            .ifPresent(user -> {
+                throw new DataIntegrityViolationException("Email [ " + email + " ] already exists");
+            });
     }
 }
