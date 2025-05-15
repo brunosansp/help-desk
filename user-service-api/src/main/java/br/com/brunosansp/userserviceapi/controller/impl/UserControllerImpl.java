@@ -3,6 +3,7 @@ package br.com.brunosansp.userserviceapi.controller.impl;
 import br.com.brunosansp.userserviceapi.controller.IUserController;
 import br.com.brunosansp.userserviceapi.service.UserService;
 import models.requests.CreateUserRequest;
+import models.requests.UpdateUserRequest;
 import models.responses.UserResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,5 +34,10 @@ public class UserControllerImpl implements IUserController {
     public ResponseEntity<Void> save(final CreateUserRequest createUserRequest) {
         userService.save(createUserRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+    
+    @Override
+    public ResponseEntity<UserResponse> update(String id, UpdateUserRequest updateUserRequest) {
+        return ResponseEntity.ok().body(userService.update(id, updateUserRequest));
     }
 }

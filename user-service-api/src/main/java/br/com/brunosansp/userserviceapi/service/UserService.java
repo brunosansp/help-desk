@@ -5,6 +5,7 @@ import br.com.brunosansp.userserviceapi.mapper.IUserMapper;
 import br.com.brunosansp.userserviceapi.repository.IUserRepository;
 import models.exceptions.ResourceNotFoundException;
 import models.requests.CreateUserRequest;
+import models.requests.UpdateUserRequest;
 import models.responses.UserResponse;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -37,6 +38,12 @@ public class UserService {
     public void save(CreateUserRequest createUserRequest) {
         verifyIfEmailAlreadyExists(createUserRequest.email(), null);
         userRepository.save(userMapper.fromRequest(createUserRequest));
+    }
+    
+    public UserResponse update(final String id, final UpdateUserRequest updateUserRequest) {
+        User user = find(id);
+        verifyIfEmailAlreadyExists(user.getEmail(), user.getId());
+        return userMapper.fromEntity(userRepository.save(userMapper.update(updateUserRequest, user)));
     }
     
     private User find(final String id) {
