@@ -14,6 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import java.util.List;
 import java.util.Optional;
 
+import static br.com.brunosansp.userserviceapi.create.CreatorUtils.generateMock;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
@@ -41,7 +42,7 @@ class UserServiceTest {
     @Test
     void whenCallFindByIdWithValidThenReturnUserResponse() {
         when(repository.findById(anyString())).thenReturn(Optional.of(new User()));
-        when(mapper.fromEntity(any(User.class))).thenReturn(mock(UserResponse.class));
+        when(mapper.fromEntity(any(User.class))).thenReturn(generateMock(UserResponse.class));
         
         final var resposne = service.findById("1");
         assertNotNull(resposne);
@@ -66,7 +67,7 @@ class UserServiceTest {
     @Test
     void whenCallFindAllThenReturnListOfUerResponse() {
         when(repository.findAll()).thenReturn(List.of(new User(), new User()));
-        when(mapper.fromEntity(any(User.class))).thenReturn(mock(UserResponse.class));
+        when(mapper.fromEntity(any(User.class))).thenReturn(generateMock(UserResponse.class));
         
         List<UserResponse> responses = service.findAll();
         
