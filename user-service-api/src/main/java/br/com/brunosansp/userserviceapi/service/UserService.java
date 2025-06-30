@@ -46,12 +46,12 @@ public class UserService {
     }
     
     public UserResponse update(final String id, final UpdateUserRequest request) {
-        User user = find(id);
-        verifyIfEmailAlreadyExists(user.getEmail(), user.getId());
+        User entity = find(id);
+        verifyIfEmailAlreadyExists(request.email(), id);
         return mapper.fromEntity(
             repository.save(
-                mapper.update(request, user).withPassword(
-                    request.password() != null ? encoder.encode(request.password()) : user.getPassword()
+                mapper.update(request, entity)
+                    .withPassword(request.password() != null ? encoder.encode(request.password()) : entity.getPassword()
                 )
             )
         );
