@@ -1,4 +1,4 @@
-package entity;
+package br.com.brunosansp.userserviceapi.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
