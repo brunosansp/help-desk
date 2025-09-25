@@ -2,13 +2,14 @@ package br.com.brunosansp.userserviceapi.controller.impl;
 
 import br.com.brunosansp.userserviceapi.entity.User;
 import br.com.brunosansp.userserviceapi.repository.IUserRepository;
-import models.exceptions.ResourceNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.List;
 
 import static br.com.brunosansp.userserviceapi.create.CreatorUtils.generateMock;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -51,5 +52,29 @@ class UserControllerImplTest {
                 .andExpect(jsonPath("$.path").value("/api/users/987"))
                 .andExpect(jsonPath("$.status").value(NOT_FOUND.value()))
                 .andExpect(jsonPath("$.timestamp").isNotEmpty());
+    }
+
+    @Test
+    void testFindAllWithSuccess() throws Exception {
+        final var entity1 = generateMock(User.class);
+        final var entity2 = generateMock(User.class);
+
+        userRepository.saveAll(List.of(entity1, entity2));
+
+        mockMvc.perform(get("/api/users"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$[0]").isNotEmpty())
+                .andExpect(jsonPath("$[1]").isNotEmpty())
+                .andExpect(jsonPath("$[0].email").value(entity1.getEmail()))
+                .andExpect(jsonPath("$[0].password").value(entity1.getPassword()))
+                .andExpect(jsonPath("$[0].profiles").isArray())
+                .andExpect(jsonPath("$[1].id").value(entity2.getId()))
+                .andExpect(jsonPath("$[1].name").value(entity2.getName()))
+                .andExpect(jsonPath("$[1].email").value(entity2.getEmail()))
+                .andExpect(jsonPath("$[1].password").value(entity2.getPassword()))
+                .andExpect(jsonPath("$[1].profiles").isArray());
+
+        userRepository.deleteAll(List.of(entity1, entity2));
     }
 }
